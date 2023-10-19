@@ -57,34 +57,32 @@ def main():
         ss.close()
         return
     cs.send(GOOD.encode("ASCII"))
-    i = 0
-    while True:
-        for k in keys:
-            cmd = get(cs)
-            if cmd == "DATA":
-                msg = ""
+    for k in keys:
+        cmd = get(cs)
+        if cmd == "DATA":
+            msg = ""
+            dt = getByte(cs)
+            while dt != "\n":
+                msg += dt
                 dt = getByte(cs)
-                while dt != "\n":
-                    msg += dt
-                    dt = getByte(cs)
-                msg = unescape(msg)
-                print(msg)
-                dt = get(cs)
-                hsh = hash(msg,k) 
-                cs.send(SIG.encode("ASCII"))
-                cs.send(hsh.encode("ASCII"))
-                pf = get(cs)
-                if pf != "PASS" and pf != "FAIL":
-                    print("ERROR")
-                    cs.close()
-                    break
-                cs.send(GOOD.encode("ASCII"))
-            else:
-                if(cmd != "QUIT"):
-                    print("ERROR")
+            msg = unescape(msg)
+            print(msg)
+            dt = get(cs)
+            hsh = hash(msg,k) 
+            cs.send(SIG.encode("ASCII"))
+            cs.send((hsh+"\n").encode("ASCII"))
+            pf = get(cs)
+            if pf != "PASS" and pf != "FAIL":
+                print("ERROR")
                 cs.close()
-                ss.close()
-                return
+                break
+            cs.send(GOOD.encode("ASCII"))
+        else:
+            if(cmd != "QUIT"):
+                print("ERROR")
+            cs.close()
+            ss.close()
+            return
 
 if __name__ == "__main__":
     main()
