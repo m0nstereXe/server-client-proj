@@ -33,12 +33,10 @@ def hash(msg, key):
 
 #escapes \ and .
 def escape(msg):
-    msg = msg.replace("\\", "\\\\")
     msg = msg.replace(".", "\\.")
     return msg
 def unescape(msg):
     msg = msg.replace("\\.", ".")
-    msg = msg.replace("\\\\", "\\")
     return msg
 
 def main():

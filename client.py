@@ -28,15 +28,13 @@ def get(sock):
     print(res)
     return res
 
-#escapes \ and .
 def escape(msg):
-    msg = msg.replace("\\", "\\\\")
     msg = msg.replace(".", "\\.")
     return msg
 def unescape(msg):
     msg = msg.replace("\\.", ".")
-    msg = msg.replace("\\\\", "\\")
     return msg
+
 
 def main():
     serverName = sys.argv[1]
@@ -79,7 +77,7 @@ def main():
             s.close()
             return
     
-    s.send("QUIT".encode("ASCII"))
+    s.send("QUIT\n".encode("ASCII"))
     s.close()
 if __name__ == "__main__":
     main()
